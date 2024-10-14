@@ -32,4 +32,11 @@ spec:
       port: {{ .Values.sentinel.service.ports.sentinel }}
       targetPort: redis-sentinel
     {{- end }}
+    {{- if and .Values.master.service.extraPorts .Values.headless.extraPortsEnabled }}
+    {{- range .Values.master.service.extraPorts }}
+    - name: {{ .name }}
+      port: {{ .port }}
+      targetPort: {{ .targetPort }}
+    {{- end }}
+    {{- end }}
   selector: {{- include "common.labels.matchLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
